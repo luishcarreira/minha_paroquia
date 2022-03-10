@@ -4,11 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
+import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_imagem_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
 class ParoquiaNomePage extends StatefulWidget {
-  const ParoquiaNomePage({Key? key}) : super(key: key);
+  final String codigo;
+  const ParoquiaNomePage({
+    Key? key,
+    required this.codigo,
+  }) : super(key: key);
 
   @override
   State<ParoquiaNomePage> createState() => _ParoquiaNomePageState();
@@ -17,32 +22,30 @@ class ParoquiaNomePage extends StatefulWidget {
 class _ParoquiaNomePageState extends State<ParoquiaNomePage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nome = TextEditingController();
-  //final ramdom = Random();
 
   _onSubmit() async {
-    //final numero = ramdom.nextInt(999999);
-
     AuthFirebaseService firebase =
         Provider.of<AuthFirebaseService>(context, listen: false);
     final isValid = _formKey.currentState!.validate();
 
     if (isValid) {
       DocumentReference docRef = firebase.firestore.collection('grupos').doc();
-      firebase.firestore.collection('usuarios').doc(docRef.id).set({
-        'codigo': 1, //numero randomico
+      firebase.firestore.collection('paroquia').doc(docRef.id).set({
+        'codigo': widget.codigo, //numero randomico
         'nome': _nome.text,
-        //'reg_imagem':
         'participantes': [
           firebase.usuario!.uid,
         ],
       });
 
-      /*Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => UserRegisterNascimentoPage(),
+          builder: (_) => ParoquiaImagemPage(
+            ref: docRef.id,
+          ),
         ),
-      );*/
+      );
     }
   }
 
@@ -53,20 +56,21 @@ class _ParoquiaNomePageState extends State<ParoquiaNomePage> {
         children: [
           SizedBox(height: 40),
           Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Escreva o nome',
+                'Escreva o nome de',
                 style: GoogleFonts.poppins(
-                  fontSize: 36,
+                  fontSize: 30,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
                 ),
               ),
               Text(
-                'de uma nova paroquia.',
+                'uma nova paroquia.',
                 style: GoogleFonts.poppins(
-                  fontSize: 40,
+                  fontSize: 30,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
@@ -128,6 +132,37 @@ class _ParoquiaNomePageState extends State<ParoquiaNomePage> {
                       return null;
                     },
                   ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 25),
+          Padding(
+            padding: EdgeInsets.all(24),
+            child: GestureDetector(
+              onTap: () {
+                _onSubmit();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.principal,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'Continuar',
+                        style: GoogleFonts.poppins(
+                          fontSize: 24,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
