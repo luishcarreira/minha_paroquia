@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/pages/auth/auth_check.dart';
 
 class SplashPage extends StatelessWidget {
@@ -13,7 +14,7 @@ class SplashPage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => AuthCheck()),
         ));
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.principal,
       body: Center(
         child: Image.asset('assets/images/logo.png'),
       ),
