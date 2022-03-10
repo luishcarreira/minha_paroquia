@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
+import 'package:minha_paroquia/core/pages/splash/splash_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
@@ -30,9 +31,11 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: AppColors.principal,
-      ),
-      home: Scaffold(),
+          primaryColor: AppColors.principal,
+          appBarTheme: AppBarTheme(
+            backgroundColor: AppColors.principal,
+          )),
+      home: SplashPage(),
     );
   }
 }

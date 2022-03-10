@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "357444126311",
+    "project_id": "minhaparoquia-644c3",
+    "storage_bucket": "minhaparoquia-644c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:357444126311:android:7789f1812989ca0b3eb6c2",
+        "android_client_info": {
+          "package_name": "com.example.minha_paroquia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "357444126311-lhc5idir9inj9gb3b0j3n80qee6mgr06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgVPzVd70a8Db7gHp_BLPHtslY97gPZ0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "357444126311-lhc5idir9inj9gb3b0j3n80qee6mgr06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
