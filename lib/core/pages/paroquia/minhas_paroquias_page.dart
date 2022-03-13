@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/components/card_paroquia_widget.dart';
+import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_imagem_page.dart';
+import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_nome_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +17,7 @@ class MinhasParoquiasPage extends StatefulWidget {
 }
 
 class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
+  final ramdom = Random();
   @override
   Widget build(BuildContext context) {
     AuthFirebaseService firebase =
@@ -70,9 +75,12 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
 
                       return Column(
                         children: [
+                          SizedBox(
+                            height: 20,
+                          ),
                           CardParoquiaWidget(
                             imagem: data['ref_imagem'],
-                            nome: data['nome'],
+                            nome: data['nome'] ?? '',
                             endereco: data['endereco'] ?? '',
                           ),
                         ],
@@ -86,7 +94,17 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            final numero = ramdom.nextInt(999999);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ParoquiaImagemPage(
+                  codigo: numero.toString(),
+                ),
+              ),
+            );
+          },
           child: Icon(Icons.add),
           backgroundColor: AppColors.principal,
         ),

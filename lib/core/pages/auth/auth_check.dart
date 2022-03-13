@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minha_paroquia/core/pages/auth/login_page.dart';
+import 'package:minha_paroquia/core/pages/paroquia/cep_teste.dart';
 import 'package:minha_paroquia/core/pages/paroquia/minhas_paroquias_page.dart';
 import 'package:minha_paroquia/core/pages/paroquia/upload_image.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';

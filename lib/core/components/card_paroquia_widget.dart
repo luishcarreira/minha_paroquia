@@ -37,7 +37,7 @@ class _CardParoquiaWidgetState extends State<CardParoquiaWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      height: 150,
       margin: EdgeInsets.only(left: 20, right: 20),
       child: Card(
         elevation: 5,
@@ -46,20 +46,23 @@ class _CardParoquiaWidgetState extends State<CardParoquiaWidget> {
         ),
         child: Center(
           child: ListTile(
-            leading: CircleAvatar(
-              child: Container(
-                child: Image.network(ref),
-              ),
+            leading: Container(
+              width: 40,
+              child:
+                  ref != '' ? Image.network(ref) : CircularProgressIndicator(),
             ),
-            title: Text(
-              widget.nome,
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w700,
-                fontSize: 20,
+            title: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                widget.nome,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),
               ),
             ),
             subtitle: Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.only(top: 10, left: 10),
               child: Text(
                 widget.endereco,
                 style: GoogleFonts.poppins(

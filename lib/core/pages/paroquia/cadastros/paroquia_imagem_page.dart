@@ -1,28 +1,57 @@
-import 'dart:math';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_cep_page.dart';
-import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_imagem_page.dart';
+import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_nome_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
-class ParoquiaNomePage extends StatefulWidget {
-  final String ref;
-  const ParoquiaNomePage({
+class ParoquiaImagemPage extends StatefulWidget {
+  final String codigo;
+  const ParoquiaImagemPage({
     Key? key,
-    required this.ref,
+    required this.codigo,
   }) : super(key: key);
 
   @override
-  State<ParoquiaNomePage> createState() => _ParoquiaNomePageState();
+  State<ParoquiaImagemPage> createState() => _ParoquiaImagemPageState();
 }
 
-class _ParoquiaNomePageState extends State<ParoquiaNomePage> {
+class _ParoquiaImagemPageState extends State<ParoquiaImagemPage> {
+  final FirebaseStorage storage = FirebaseStorage.instance;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nome = TextEditingController();
+  String ref = '';
+
+  Future<XFile?> getImage() async {
+    final ImagePicker _picker = ImagePicker();
+    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    return image;
+  }
+
+  Future<UploadTask> upload(String path) async {
+    File file = File(path);
+    try {
+      ref = 'images/img-${widget.codigo}.jpg';
+      return storage.ref(ref).putFile(file);
+    } on FirebaseException catch (e) {
+      throw Exception('Erro no upload: ${e.code}');
+    }
+  }
+
+  pickAndUploadImage() async {
+    XFile? file = await getImage();
+    if (file != null) {
+      UploadTask task = await upload(file.path);
+    } else {
+      //mensagem de erro
+    }
+  }
 
   _onSubmit() async {
     AuthFirebaseService firebase =
@@ -30,18 +59,26 @@ class _ParoquiaNomePageState extends State<ParoquiaNomePage> {
     final isValid = _formKey.currentState!.validate();
 
     if (isValid) {
-      firebase.firestore.collection('paroquia').doc(widget.ref).update({
+      DocumentReference docRef = firebase.firestore.collection('grupos').doc();
+      firebase.firestore.collection('paroquia').doc(docRef.id).set({
+        'codigo': widget.codigo,
         'nome': _nome.text,
+        'ref_imagem': ref,
+        'participantes': [
+          firebase.usuario!.uid,
+        ],
       });
 
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (_) => ParoquiaCEPPage(
-            ref: widget.ref,
+            ref: docRef.id,
           ),
         ),
       );
+    } else {
+      //mensagem de erro
     }
   }
 
@@ -52,21 +89,20 @@ class _ParoquiaNomePageState extends State<ParoquiaNomePage> {
         children: [
           SizedBox(height: 40),
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Escreva o nome de',
+                'Selecione a imagem e',
                 style: GoogleFonts.poppins(
-                  fontSize: 30,
+                  fontSize: 25,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
                 ),
               ),
               Text(
-                'uma nova paroquia.',
+                'um nome para sua paroquia',
                 style: GoogleFonts.poppins(
-                  fontSize: 30,
+                  fontSize: 25,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
@@ -75,32 +111,42 @@ class _ParoquiaNomePageState extends State<ParoquiaNomePage> {
             ],
           ),
           SizedBox(height: 25),
-          Column(
-            children: [
-              Text(
-                'Escreva o nome para sua paroquia. Todos',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Color(0xFFA1C69C),
-                ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: TextButton(
+              onPressed: pickAndUploadImage,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.image,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'Adiconar Imagem',
+                    style: TextStyle(color: AppColors.principal),
+                  ),
+                ],
               ),
-              Text(
-                'vão identificar a paroquia pelo',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Color(0xFFA1C69C),
-                ),
-              ),
-              Text(
-                'nome que voce vai colocar aqui.',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Color(0xFFA1C69C),
-                ),
-              ),
-            ],
+            ),
           ),
-          SizedBox(height: 25),
+          SizedBox(
+            height: 25,
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              'Escreva o nome para sua paroquia.',
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Color.fromARGB(255, 101, 104, 101),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 25,
+          ),
           Form(
             key: _formKey,
             child: Padding(
