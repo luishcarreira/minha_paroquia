@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/components/card_paroquia_widget.dart';
+import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_imagem_page.dart';
 import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_nome_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
@@ -74,10 +75,12 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
 
                       return Column(
                         children: [
+                          SizedBox(
+                            height: 20,
+                          ),
                           CardParoquiaWidget(
-                            imagem: data['ref_imagem'] ??
-                                'img-2022-03-10 19:04:08.142668',
-                            nome: data['nome'],
+                            imagem: data['ref_imagem'],
+                            nome: data['nome'] ?? '',
                             endereco: data['endereco'] ?? '',
                           ),
                         ],
@@ -96,7 +99,7 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ParoquiaNomePage(
+                builder: (_) => ParoquiaImagemPage(
                   codigo: numero.toString(),
                 ),
               ),
