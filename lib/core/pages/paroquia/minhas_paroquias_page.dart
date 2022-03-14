@@ -98,7 +98,6 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              print(data['ref']);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
