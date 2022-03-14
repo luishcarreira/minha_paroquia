@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_cep_page.dart';
-import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_nome_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
@@ -67,6 +66,7 @@ class _ParoquiaImagemPageState extends State<ParoquiaImagemPage> {
         'participantes': [
           firebase.usuario!.uid,
         ],
+        'ref': docRef.id
       });
 
       Navigator.push(
