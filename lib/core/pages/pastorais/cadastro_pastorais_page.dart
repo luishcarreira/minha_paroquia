@@ -60,16 +60,23 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
     final isValid = _formKey.currentState!.validate();
 
     if (isValid) {
+      DocumentReference dbRef = firebase.firestore
+          .collection('paroquia')
+          .doc(widget.docRef)
+          .collection('pastorais')
+          .doc();
+
       firebase.firestore
           .collection('paroquia')
           .doc(widget.docRef)
           .collection('pastorais')
-          .add(
-        {
-          'ref_imagem': ref,
-          'nome': _nome.text,
-        },
-      );
+          .doc(dbRef.id)
+          .set({
+        'codigo_pastoral': widget.codigo,
+        'ref_imagem': ref,
+        'nome': _nome.text,
+        'ref_doc': dbRef.id,
+      });
 
       Navigator.pop(context);
     } else {

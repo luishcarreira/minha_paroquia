@@ -18,19 +18,27 @@ class MinhasParoquiasPage extends StatefulWidget {
 
 class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
   final ramdom = Random();
+  late Stream<QuerySnapshot> _minhasParoquiasStream;
+  late Stream<QuerySnapshot> _minhasParoquias;
+  late Stream<QuerySnapshot> _exploarStream;
   List<String> paroquiaCod = ['123'];
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    iniciarVariaveis();
+  }
+
+  void iniciarVariaveis() async {
     AuthFirebaseService firebase =
         Provider.of<AuthFirebaseService>(context, listen: false);
-    final Stream<QuerySnapshot> _minhasParoquiasStream = FirebaseFirestore
-        .instance
+    _minhasParoquiasStream = FirebaseFirestore.instance
         .collection('paroquia')
         .where('participantes', arrayContains: firebase.usuario!.uid)
         .snapshots();
 
-    final Stream<QuerySnapshot> _minhasParoquias = FirebaseFirestore.instance
+    _minhasParoquias = FirebaseFirestore.instance
         .collection('paroquia')
         .where('participantes', arrayContains: firebase.usuario!.uid)
         .snapshots();
@@ -42,11 +50,16 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
       });
     });
 
-    final Stream<QuerySnapshot> _exploarStream = FirebaseFirestore.instance
+    _exploarStream = FirebaseFirestore.instance
         .collection('paroquia')
         .where('codigo', whereNotIn: paroquiaCod)
         .snapshots();
 
+    paroquiaCod.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -102,7 +115,6 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => PastoraisPage(
-                                    codigo: data['codigo'],
                                     ref: data['ref'],
                                   ),
                                 ),

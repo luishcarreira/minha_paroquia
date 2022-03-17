@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CardPastoralWidget extends StatefulWidget {
-  final String imagem;
-  final String nome;
+  final String? imagem;
+  final String? nome;
 
   const CardPastoralWidget({
     Key? key,
@@ -35,32 +35,33 @@ class _CardPastoralWidgetState extends State<CardPastoralWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
-      margin: EdgeInsets.only(left: 40, right: 40),
-      child: Card(
-        elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Center(
-          child: ListTile(
-            leading: Container(
-              width: 40,
-              child:
-                  ref != '' ? Image.network(ref) : CircularProgressIndicator(),
-            ),
-            title: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                widget.nome,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                ),
-              ),
-            ),
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border.fromBorderSide(
+          BorderSide(
+            color: Color(0xFFE1E1E6),
           ),
         ),
+        color: Color(0xFFFFFFFF),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        //crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          loading == false
+              ? CircleAvatar(
+                  backgroundImage: NetworkImage(ref),
+                  radius: 40,
+                )
+              : CircularProgressIndicator(),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            widget.nome!,
+          ),
+        ],
       ),
     );
   }
