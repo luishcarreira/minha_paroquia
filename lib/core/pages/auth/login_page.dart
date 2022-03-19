@@ -3,10 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/pages/auth/reset_password_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final email = TextEditingController();
   final nome = TextEditingController();
   final senha = TextEditingController();
+  File? _image;
 
   bool isLogin = true;
   late String titulo;
@@ -30,6 +33,21 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     setFormAction(true);
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedImagem = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+      maxWidth: 150,
+    );
+
+    if (pickedImagem != null) {
+      setState(() {
+        _image = File(pickedImagem.path);
+      });
+    }
   }
 
   setFormAction(bool acao) {
@@ -59,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   registrar() async {
+    print('tela ${nome.text}');
     try {
       await context
           .read<AuthFirebaseService>()
@@ -112,32 +131,56 @@ class _LoginPageState extends State<LoginPage> {
                     if (!isLogin)
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
-                        child: Material(
-                          borderRadius: BorderRadius.circular(10),
-                          //color: Colors.blueGrey[50],
-                          elevation: 5,
-                          //shadowColor: Colors.black,
-                          child: TextFormField(
-                            controller: nome,
-                            style: TextStyle(
-                              fontSize: 22,
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.grey,
+                              backgroundImage:
+                                  _image != null ? FileImage(_image!) : null,
                             ),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'nome',
-                              hintStyle: TextStyle(
-                                color: AppColors.principal,
+                            TextButton(
+                              onPressed: _pickImage,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.image,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text('Adiconar Imagem'),
+                                ],
                               ),
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Icon(
-                                  Icons.person,
-                                  color: AppColors.principal,
+                            ),
+                            Material(
+                              borderRadius: BorderRadius.circular(10),
+                              //color: Colors.blueGrey[50],
+                              elevation: 5,
+                              //shadowColor: Colors.black,
+                              child: TextFormField(
+                                controller: nome,
+                                style: TextStyle(
+                                  fontSize: 22,
                                 ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'nome',
+                                  hintStyle: TextStyle(
+                                    color: AppColors.principal,
+                                  ),
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Icon(
+                                      Icons.person,
+                                      color: AppColors.principal,
+                                    ),
+                                  ),
+                                ),
+                                keyboardType: TextInputType.name,
                               ),
                             ),
-                            keyboardType: TextInputType.name,
-                          ),
+                          ],
                         ),
                       ),
                     Padding(

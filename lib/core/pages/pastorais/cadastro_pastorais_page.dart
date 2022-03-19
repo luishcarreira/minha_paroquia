@@ -10,18 +10,20 @@ import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_cep_page.d
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
-class ParoquiaImagemPage extends StatefulWidget {
+class CadastroPastoraisPage extends StatefulWidget {
   final String codigo;
-  const ParoquiaImagemPage({
+  final String docRef;
+  const CadastroPastoraisPage({
     Key? key,
     required this.codigo,
+    required this.docRef,
   }) : super(key: key);
 
   @override
-  State<ParoquiaImagemPage> createState() => _ParoquiaImagemPageState();
+  State<CadastroPastoraisPage> createState() => _CadastroPastoraisPageState();
 }
 
-class _ParoquiaImagemPageState extends State<ParoquiaImagemPage> {
+class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
   final FirebaseStorage storage = FirebaseStorage.instance;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nome = TextEditingController();
@@ -36,7 +38,7 @@ class _ParoquiaImagemPageState extends State<ParoquiaImagemPage> {
   Future<UploadTask> upload(String path) async {
     File file = File(path);
     try {
-      ref = 'images/img-${widget.codigo}.jpg';
+      ref = 'images/img-pastoral-${widget.codigo}.jpg';
       return storage.ref(ref).putFile(file);
     } on FirebaseException catch (e) {
       throw Exception('Erro no upload: ${e.code}');
@@ -58,25 +60,26 @@ class _ParoquiaImagemPageState extends State<ParoquiaImagemPage> {
     final isValid = _formKey.currentState!.validate();
 
     if (isValid) {
-      DocumentReference docRef = firebase.firestore.collection('grupos').doc();
-      firebase.firestore.collection('paroquia').doc(docRef.id).set({
-        'codigo': widget.codigo,
-        'nome': _nome.text,
+      DocumentReference dbRef = firebase.firestore
+          .collection('paroquia')
+          .doc(widget.docRef)
+          .collection('pastorais')
+          .doc();
+
+      firebase.firestore
+          .collection('paroquia')
+          .doc(widget.docRef)
+          .collection('pastorais')
+          .doc(dbRef.id)
+          .set({
+        'codigo_pastoral': widget.codigo,
         'ref_imagem': ref,
-        'participantes': [
-          firebase.usuario!.uid,
-        ],
-        'ref': docRef.id
+        'nome': _nome.text,
+        'ref_paroquia': widget.docRef,
+        'ref_pastoral': dbRef.id,
       });
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => ParoquiaCEPPage(
-            ref: docRef.id,
-          ),
-        ),
-      );
+      Navigator.pop(context);
     } else {
       //mensagem de erro
     }

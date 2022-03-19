@@ -52,6 +52,23 @@ class _ParoquiaEnderecoPageState extends State<ParoquiaEnderecoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: SafeArea(
+          top: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       body: ListView(
         children: [
           SizedBox(height: 40),
@@ -85,32 +102,28 @@ class _ParoquiaEnderecoPageState extends State<ParoquiaEnderecoPage> {
               children: [
                 TextFormField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
+                      border: OutlineInputBorder(), label: Text('Logradouro')),
                   enabled: false,
                   initialValue: widget.result.logradouro,
                 ),
                 SizedBox(height: 10),
                 TextFormField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
+                      border: OutlineInputBorder(), label: Text('Bairro')),
                   enabled: false,
                   initialValue: widget.result.bairro,
                 ),
                 SizedBox(height: 10),
                 TextFormField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
+                      border: OutlineInputBorder(), label: Text('Cidade')),
                   enabled: false,
                   initialValue: widget.result.localidade,
                 ),
                 SizedBox(height: 10),
                 TextFormField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
+                      border: OutlineInputBorder(), label: Text('UF')),
                   enabled: false,
                   initialValue: widget.result.uf,
                 ),
@@ -119,8 +132,7 @@ class _ParoquiaEnderecoPageState extends State<ParoquiaEnderecoPage> {
                   key: _formKey,
                   child: TextFormField(
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
+                        border: OutlineInputBorder(), label: Text('Numero')),
                     controller: _numero,
                   ),
                 )
