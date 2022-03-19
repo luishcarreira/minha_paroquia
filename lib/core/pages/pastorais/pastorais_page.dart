@@ -8,6 +8,7 @@ import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/components/card_pastoral_widget.dart';
 import 'package:minha_paroquia/core/pages/chat/chat_message_page.dart';
 import 'package:minha_paroquia/core/pages/pastorais/cadastro_pastorais_page.dart';
+import 'package:minha_paroquia/core/pages/pastorais/pastorais_sobre_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
@@ -35,10 +36,11 @@ class _PastoraisPageState extends State<PastoraisPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },),
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),
@@ -50,7 +52,7 @@ class _PastoraisPageState extends State<PastoraisPage> {
             Text(
               'Pastorais',
               style: GoogleFonts.poppins(
-                fontSize: 24,
+                fontSize: 36,
                 color: AppColors.principal,
                 fontWeight: FontWeight.bold,
                 height: 1.2,
@@ -102,7 +104,7 @@ class _PastoraisPageState extends State<PastoraisPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => ChatMessagePage(
+                                      builder: (_) => PastoraisSobrePage(
                                         codigo_pastoral:
                                             data['codigo_pastoral'],
                                         imagem: ref,
@@ -121,55 +123,6 @@ class _PastoraisPageState extends State<PastoraisPage> {
                       },
                     ).toList(),
                   );
-
-                  /*if (snapshot.hasData == true) {
-                    return ListView(
-                      children: snapshot.data!.docs.map(
-                        (DocumentSnapshot document) {
-                          Map<String, dynamic> data =
-                              document.data()! as Map<String, dynamic>;
-            
-                          return Column(
-                            children: [
-                              SizedBox(
-                                height: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  final FirebaseStorage storage =
-                                      FirebaseStorage.instance;
-                                  String ref = '';
-                                  ref = await storage
-                                      .ref(data['ref_imagem'])
-                                      .getDownloadURL();
-            
-                                  if (ref != '')
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => ChatMessagePage(
-                                          codigo_pastoral: data['codigo_pastoral'],
-                                          imagem: ref,
-                                          nome: data['nome'],
-                                        ),
-                                      ),
-                                    );
-                                },
-                                child: CardPastoralWidget(
-                                  imagem: data['ref_imagem'],
-                                  nome: data['nome'],
-                                ),
-                              )
-                            ],
-                          );
-                        },
-                      ).toList(),
-                    );
-                  }
-            
-                  return Center(
-                    child: Text('adicione uma pastoral'),
-                  );*/
                 },
               ),
             ),

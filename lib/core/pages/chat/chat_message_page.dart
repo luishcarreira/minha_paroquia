@@ -79,12 +79,6 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        "last seen today at 12:05",
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
-                      )
                     ],
                   ),
                 ),
@@ -183,46 +177,6 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                       },
                     ),
                   ),
-                  /*Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          autofocus: true,
-                          cursorColor: Colors.grey,
-                          controller: txtMensagemCtrl,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(30),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      splashRadius: 20,
-                      icon: Icon(Icons.send),
-                      onPressed: () async {
-                        MensagemModel m = MensagemModel(
-                          uid: firebase.usuario!.uid,
-                          nome: firebase.usuario!.displayName,
-                          mensagem: txtMensagemCtrl.text,
-                          data: Timestamp.now(),
-                          codigo_pastoral: widget.codigo_pastoral,
-                        );
-                        await firebase.firestore
-                            .collection('mensagem')
-                            .add(m.toMap());
-                        txtMensagemCtrl.clear();
-                      },
-                    ),
-                  ],
-                ),*/
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
@@ -293,13 +247,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                                           ),
                                           IconButton(
                                             icon: Icon(Icons.camera_alt),
-                                            onPressed: () {
-                                              // Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //         builder: (builder) =>
-                                              //             CameraApp()));
-                                            },
+                                            onPressed: () {},
                                           ),
                                         ],
                                       ),
@@ -477,33 +425,10 @@ class Mensagem extends StatelessWidget {
                     '${model.data!.toDate().hour}:${model.data!.toDate().minute}',
               )
             : ReplyCard(
+                nome: model.nome!,
                 message: model.mensagem!,
                 time:
                     '${model.data!.toDate().hour}:${model.data!.toDate().minute}'),
-        /*Text(
-          model.nome!,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        Row(
-          children: [
-            Container(
-              width: 235,
-              child: Text(model.mensagem!),
-            ),
-            Text(
-              '${model.data!.toDate().hour}:${model.data!.toDate().minute}',
-              style: TextStyle(
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),*/
       ],
     );
   }

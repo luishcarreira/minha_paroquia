@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/components/card_paroquia_widget.dart';
 import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_imagem_page.dart';
@@ -18,70 +19,87 @@ class MinhasParoquiasPage extends StatefulWidget {
 
 class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
   final ramdom = Random();
-  late Stream<QuerySnapshot> _minhasParoquiasStream;
-  late Stream<QuerySnapshot> _minhasParoquias;
-  late Stream<QuerySnapshot> _exploarStream;
-  List<String> paroquiaCod = ['123'];
+  List<String> paroquiaCod = [''];
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    iniciarVariaveis();
-  }
-
-  void iniciarVariaveis() async {
+  Widget build(BuildContext context) {
     AuthFirebaseService firebase =
         Provider.of<AuthFirebaseService>(context, listen: false);
-    _minhasParoquiasStream = FirebaseFirestore.instance
+
+    Stream<QuerySnapshot> _minhasParoquiasStream = FirebaseFirestore.instance
         .collection('paroquia')
         .where('participantes', arrayContains: firebase.usuario!.uid)
         .snapshots();
 
-    _minhasParoquias = FirebaseFirestore.instance
+    Stream<QuerySnapshot> _minhasParoquias = FirebaseFirestore.instance
         .collection('paroquia')
         .where('participantes', arrayContains: firebase.usuario!.uid)
         .snapshots();
 
     _minhasParoquias.forEach((element) {
+      paroquiaCod.clear();
       element.docs.asMap().forEach((index, data) {
         paroquiaCod.add(element.docs[index]['codigo']);
-        print('minhas paroquinhas $paroquiaCod');
       });
     });
 
-    _exploarStream = FirebaseFirestore.instance
-        .collection('paroquia')
-        .where('codigo', whereNotIn: paroquiaCod)
-        .snapshots();
-
-    paroquiaCod.clear();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Paroquias'),
-          bottom: TabBar(
-            indicatorColor: Colors.white,
-            tabs: [
-              Tab(
-                child: Text(
-                  'Minhas Paroquias',
-                  style: TextStyle(color: Colors.white),
-                ),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(200),
+          child: Container(
+            color: AppColors.principal,
+            child: SafeArea(
+              top: true,
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      onPressed: () async {
+                        firebase.logout();
+                      },
+                      icon: Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Paróquias',
+                    style: GoogleFonts.poppins(
+                      fontSize: 36,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 45,
+                  ),
+                  TabBar(
+                    labelColor: Colors.black54,
+                    indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50), // Creates border
+                      color: Colors.white,
+                    ),
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          'Minhas Paroquias',
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Explorar',
+                        ),
+                      )
+                    ],
+                  ),
+                ],
               ),
-              Tab(
-                child: Text(
-                  'Explorar',
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
-            ],
+            ),
           ),
         ),
         body: TabBarView(
@@ -134,7 +152,10 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
               },
             ),
             StreamBuilder<QuerySnapshot>(
-              stream: _exploarStream,
+              stream: FirebaseFirestore.instance
+                  .collection('paroquia')
+                  .where('codigo', whereNotIn: paroquiaCod)
+                  .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
@@ -156,10 +177,19 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
                           SizedBox(
                             height: 20,
                           ),
-                          CardParoquiaWidget(
-                            imagem: data['ref_imagem'],
-                            nome: data['nome'] ?? '',
-                            endereco: data['endereco'] ?? '',
+                          GestureDetector(
+                            onTap: () {
+                              _showDialog(
+                                context,
+                                data['ref'],
+                                data['nome'],
+                              );
+                            },
+                            child: CardParoquiaWidget(
+                              imagem: data['ref_imagem'],
+                              nome: data['nome'] ?? '',
+                              endereco: data['endereco'] ?? '',
+                            ),
                           ),
                         ],
                       );
@@ -188,4 +218,41 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
       ),
     );
   }
+}
+
+void _showDialog(BuildContext context, String docRef, String nome) {
+  AuthFirebaseService firebase =
+      Provider.of<AuthFirebaseService>(context, listen: false);
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Paroquias"),
+        content: Text("Deseja entrar na $nome?"),
+        actions: <Widget>[
+          TextButton(
+            child: Text("Sim"),
+            onPressed: () async {
+              await firebase.firestore
+                  .collection('paroquia')
+                  .doc(docRef)
+                  .update(
+                {
+                  'participantes':
+                      FieldValue.arrayUnion([firebase.usuario!.uid]),
+                },
+              );
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text("Não"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

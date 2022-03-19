@@ -75,7 +75,8 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
         'codigo_pastoral': widget.codigo,
         'ref_imagem': ref,
         'nome': _nome.text,
-        'ref_doc': dbRef.id,
+        'ref_paroquia': widget.docRef,
+        'ref_pastoral': dbRef.id,
       });
 
       Navigator.pop(context);
@@ -87,6 +88,23 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: SafeArea(
+          top: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       body: ListView(
         children: [
           SizedBox(height: 40),
