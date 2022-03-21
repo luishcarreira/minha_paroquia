@@ -7,6 +7,7 @@ import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/components/card_paroquia_widget.dart';
 import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_imagem_page.dart';
 import 'package:minha_paroquia/core/pages/pastorais/pastorais_page.dart';
+import 'package:minha_paroquia/core/pages/user/usuario_perfil_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
@@ -57,11 +58,16 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
                   Align(
                     alignment: Alignment.topRight,
                     child: IconButton(
-                      onPressed: () async {
-                        firebase.logout();
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => UsuarioPerfilPage(),
+                          ),
+                        );
                       },
                       icon: Icon(
-                        Icons.logout,
+                        Icons.person,
                         color: Colors.white,
                       ),
                     ),
