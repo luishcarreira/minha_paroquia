@@ -77,52 +77,79 @@ class _PastoraisPageState extends State<PastoraisPage> {
                     return Center(child: CircularProgressIndicator());
                   }
 
-                  return GridView.count(
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 1,
-                    crossAxisCount: 2,
-                    children: snapshot.data!.docs.map(
-                      (DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                            document.data()! as Map<String, dynamic>;
+                  if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Ainda não temos nenhum evento.',
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            color: AppColors.principal,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                          ),
+                        ),
+                        Text(
+                          'Clique no botão, para adicionar um!',
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            color: AppColors.principal,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return GridView.count(
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 1,
+                      crossAxisCount: 2,
+                      children: snapshot.data!.docs.map(
+                        (DocumentSnapshot document) {
+                          Map<String, dynamic> data =
+                              document.data()! as Map<String, dynamic>;
 
-                        return Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                final FirebaseStorage storage =
-                                    FirebaseStorage.instance;
-                                String ref = '';
-                                ref = await storage
-                                    .ref(data['ref_imagem'])
-                                    .getDownloadURL();
-
-                                if (ref != '')
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => PastoraisSobrePage(
-                                        codigo_pastoral:
-                                            data['codigo_pastoral'],
-                                        imagem: ref,
-                                        nome: data['nome'],
-                                      ),
-                                    ),
-                                  );
-                              },
-                              child: CardPastoralWidget(
-                                imagem: data['ref_imagem'],
-                                nome: data['nome'],
+                          return Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
                               ),
-                            )
-                          ],
-                        );
-                      },
-                    ).toList(),
-                  );
+                              GestureDetector(
+                                onTap: () async {
+                                  final FirebaseStorage storage =
+                                      FirebaseStorage.instance;
+                                  String ref = '';
+                                  ref = await storage
+                                      .ref(data['ref_imagem'])
+                                      .getDownloadURL();
+
+                                  if (ref != '')
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => PastoraisSobrePage(
+                                          refParoquia: data['ref_paroquia'],
+                                          codigo_pastoral:
+                                              data['codigo_pastoral'],
+                                          imagem: ref,
+                                          nome: data['nome'],
+                                        ),
+                                      ),
+                                    );
+                                },
+                                child: CardPastoralWidget(
+                                  imagem: data['ref_imagem'],
+                                  nome: data['nome'],
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      ).toList(),
+                    );
+                  }
                 },
               ),
             ),

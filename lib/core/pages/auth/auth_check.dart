@@ -1,12 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minha_paroquia/core/pages/auth/login_page.dart';
-import 'package:minha_paroquia/core/pages/paroquia/cep_teste.dart';
+import 'package:minha_paroquia/core/pages/home/home_page.dart';
 import 'package:minha_paroquia/core/pages/paroquia/minhas_paroquias_page.dart';
-import 'package:minha_paroquia/core/pages/paroquia/upload_image.dart';
 import 'package:minha_paroquia/core/pages/user/cadastro/cadastro_nome_foto_usuario_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
@@ -54,13 +52,17 @@ verificaRegistro(AuthFirebaseService auth) {
       }
 
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
+        return Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
       }
 
       if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
         return CadastroNomeFotoUsuarioPage();
       } else {
-        return MinhasParoquiasPage();
+        return HomePage();
       }
     },
   );

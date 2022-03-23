@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
-import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_cep_page.dart';
+import 'package:minha_paroquia/core/pages/pastorais/cadastro_pastorais_sobre_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
@@ -79,7 +79,15 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
         'ref_pastoral': dbRef.id,
       });
 
-      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => CadastroPastoraisSobrePage(
+            refParoquia: widget.docRef,
+            refPastoral: dbRef.id,
+          ),
+        ),
+      );
     } else {
       //mensagem de erro
     }
@@ -120,7 +128,7 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
                 ),
               ),
               Text(
-                'um nome para sua paroquia',
+                'um nome para a pastoral',
                 style: GoogleFonts.poppins(
                   fontSize: 25,
                   color: AppColors.principal,
@@ -157,7 +165,7 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
           Align(
             alignment: Alignment.center,
             child: Text(
-              'Escreva o nome para sua paroquia.',
+              'Escreva o nome para a pastoral.',
               style: GoogleFonts.poppins(
                 fontSize: 14,
                 color: Color.fromARGB(255, 101, 104, 101),

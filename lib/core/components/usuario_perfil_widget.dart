@@ -33,7 +33,9 @@ class _UsuarioPerfilWidgetState extends State<UsuarioPerfilWidget> {
 
   loadImages() async {
     ref = await storage.ref(widget.foto).getDownloadURL();
-    setState(() => loading = false);
+    if (mounted) {
+      setState(() => loading = false);
+    }
   }
 
   @override
