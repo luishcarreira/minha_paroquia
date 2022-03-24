@@ -31,7 +31,7 @@ class _ParoquiaEnderecoPageState extends State<ParoquiaEnderecoPage> {
     if (isValid) {
       firebase.firestore.collection('paroquia').doc(widget.ref).update(
         {
-          'endereco': widget.result.logradouro +
+          'endereco_completo': widget.result.logradouro +
               ', Nº ' +
               _numero.text +
               ' - ' +
@@ -40,6 +40,12 @@ class _ParoquiaEnderecoPageState extends State<ParoquiaEnderecoPage> {
               widget.result.localidade +
               ' - ' +
               widget.result.uf,
+          'cep': widget.result.cep,
+          'logradouro': widget.result.logradouro,
+          'bairro': widget.result.bairro,
+          'localidade': widget.result.localidade,
+          'uf': widget.result.uf,
+          'numero': _numero.text
         },
       );
 

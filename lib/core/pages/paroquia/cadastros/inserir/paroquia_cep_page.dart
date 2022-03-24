@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cep2/flutter_cep2.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
-import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_endereco_page.dart';
+import 'package:minha_paroquia/core/pages/paroquia/cadastros/inserir/paroquia_endereco_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 

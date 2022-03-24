@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/components/card_paroquia_widget.dart';
-import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_imagem_page.dart';
+import 'package:minha_paroquia/core/pages/paroquia/cadastros/inserir/paroquia_imagem_page.dart';
 import 'package:minha_paroquia/core/pages/pastorais/pastorais_page.dart';
 import 'package:minha_paroquia/core/pages/user/usuario_perfil_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
@@ -113,7 +113,7 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
                     CardParoquiaWidget(
                       imagem: data['ref_imagem'],
                       nome: data['nome'] ?? '',
-                      endereco: data['endereco'] ?? '',
+                      endereco: data['endereco_completo'] ?? '',
                       ref: data['ref'],
                     ),
                   ],

@@ -2,7 +2,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
+import 'package:minha_paroquia/core/pages/paroquia/cadastros/alterar/paroquia_imagem_alterar_page.dart';
 import 'package:minha_paroquia/core/pages/pastorais/pastorais_page.dart';
+import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
+import 'package:provider/provider.dart';
 
 class CardParoquiaWidget extends StatefulWidget {
   final String imagem;
@@ -42,6 +45,11 @@ class _CardParoquiaWidgetState extends State<CardParoquiaWidget> {
 
   @override
   Widget build(BuildContext context) {
+    AuthFirebaseService firebase = Provider.of<AuthFirebaseService>(
+      context,
+      listen: false,
+    );
+
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: Card(
@@ -78,7 +86,7 @@ class _CardParoquiaWidgetState extends State<CardParoquiaWidget> {
             ButtonBar(
               alignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton(
+                ElevatedButton(
                   style: ButtonStyle(),
                   onPressed: () {
                     Navigator.push(
@@ -95,12 +103,47 @@ class _CardParoquiaWidgetState extends State<CardParoquiaWidget> {
                 Row(
                   children: [
                     IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ParoquiaImagemAlterarPage(
+                              ref_paroquia: widget.ref,
+                              foto: ref,
+                            ),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        color: AppColors.principal,
+                      ),
                     ),
                     IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        try {
+                          firebase.firestore
+                              .collection('paroquia')
+                              .doc(widget.ref)
+                              .delete();
+
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Paroquia excluida com sucesso!'),
+                            backgroundColor: Colors.green,
+                          ));
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Erro ao excluir paroquia'),
+                              backgroundColor: Colors.red[400],
+                            ),
+                          );
+                        }
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
                     )
                   ],
                 )
@@ -110,68 +153,5 @@ class _CardParoquiaWidgetState extends State<CardParoquiaWidget> {
         ),
       ),
     );
-    /*Container(
-      height: 150,
-      margin: EdgeInsets.only(left: 20, right: 20),
-      child: Card(
-        elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Center(
-          child: ListTile(
-            leading: Container(
-              width: 40,
-              child:
-                  ref != '' ? Image.network(ref) : CircularProgressIndicator(),
-            ),
-            title: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                widget.nome,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 10, left: 10),
-              child: Text(
-                widget.endereco,
-                style: GoogleFonts.poppins(
-                  color: Color(0xFF676767),
-                  fontWeight: FontWeight.normal,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-            trailing: PopupMenuButton<String>(
-              icon: Icon(
-                Icons.more_vert,
-                color: AppColors.principal,
-              ),
-              padding: EdgeInsets.all(0),
-              onSelected: (value) {
-                if (value == 'editar') {
-                } else {}
-              },
-              itemBuilder: (BuildContext contesxt) {
-                return [
-                  PopupMenuItem(
-                    child: Text("Editar"),
-                    value: 'editar',
-                  ),
-                  PopupMenuItem(
-                    child: Text("Excluir"),
-                    value: 'excluir',
-                  ),
-                ];
-              },
-            ),
-          ),
-        ),
-      ),
-    );*/
   }
 }
