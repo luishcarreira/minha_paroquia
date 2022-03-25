@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/components/card_evento_page.dart';
 import 'package:minha_paroquia/core/pages/chat/chat_message_page.dart';
+import 'package:minha_paroquia/core/pages/pastorais/eventos/alterar_evento_page.dart';
 import 'package:minha_paroquia/core/pages/pastorais/eventos/cadastro_evento_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
@@ -275,11 +276,8 @@ class _PastoraisSobrePageState extends State<PastoraisSobrePage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (_) => ChatMessagePage(
-                                              codigo_pastoral:
-                                                  widget.codigo_pastoral,
-                                              imagem: widget.imagem,
-                                              nome: widget.nome,
+                                            builder: (_) => AlterarEventoPage(
+                                              refEvento: data['ref_evento'],
                                             ),
                                           ),
                                         );

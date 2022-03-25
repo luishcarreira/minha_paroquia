@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
-import 'package:minha_paroquia/core/components/card_paroquia_widget.dart';
+import 'package:minha_paroquia/core/components/card_paroquia_explorar_widget.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
@@ -15,11 +15,12 @@ class ExplorarPage extends StatefulWidget {
 }
 
 class _ExplorarPageState extends State<ExplorarPage> {
+  String searchtxt = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(150),
+        preferredSize: Size.fromHeight(180),
         child: Container(
           color: AppColors.principal,
           child: SafeArea(
@@ -36,6 +37,30 @@ class _ExplorarPageState extends State<ExplorarPage> {
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     height: 1.2,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: TextFormField(
+                    onChanged: (text) => {
+                      searchtxt = text,
+                      setState(() {
+                        searchtxt;
+                      })
+                    },
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.fromLTRB(10, 10, 15, 0),
+                      fillColor: Colors.white,
+                      filled: true,
+                      prefixIcon: Icon(Icons.search),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -76,10 +101,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
                           data['nome'],
                         );
                       },
-                      child: CardParoquiaWidget(
+                      child: CardParoquiaExplorarWidget(
                         imagem: data['ref_imagem'],
                         nome: data['nome'] ?? '',
-                        endereco: data['endereco'] ?? '',
+                        endereco: data['endereco_completo'] ?? '',
                         ref: data['ref'],
                       ),
                     ),

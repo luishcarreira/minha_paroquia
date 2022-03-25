@@ -4,10 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
-import 'package:minha_paroquia/core/components/card_paroquia_widget.dart';
+import 'package:minha_paroquia/core/components/card_minhas_paroquia_widget.dart';
 import 'package:minha_paroquia/core/pages/paroquia/cadastros/inserir/paroquia_imagem_page.dart';
-import 'package:minha_paroquia/core/pages/pastorais/pastorais_page.dart';
-import 'package:minha_paroquia/core/pages/user/usuario_perfil_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +53,6 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
                       searchtxt = text,
                       setState(() {
                         searchtxt;
-                        print(searchtxt);
                       })
                     },
                     decoration: InputDecoration(
@@ -110,7 +107,7 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    CardParoquiaWidget(
+                    CardMinhasParoquiaWidget(
                       imagem: data['ref_imagem'],
                       nome: data['nome'] ?? '',
                       endereco: data['endereco_completo'] ?? '',

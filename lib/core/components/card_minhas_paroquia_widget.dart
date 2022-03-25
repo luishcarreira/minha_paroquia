@@ -7,13 +7,13 @@ import 'package:minha_paroquia/core/pages/pastorais/pastorais_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
-class CardParoquiaWidget extends StatefulWidget {
+class CardMinhasParoquiaWidget extends StatefulWidget {
   final String imagem;
   final String nome;
   final String endereco;
   final String ref;
 
-  const CardParoquiaWidget({
+  const CardMinhasParoquiaWidget({
     Key? key,
     required this.imagem,
     required this.nome,
@@ -22,10 +22,11 @@ class CardParoquiaWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CardParoquiaWidget> createState() => _CardParoquiaWidgetState();
+  State<CardMinhasParoquiaWidget> createState() =>
+      _CardMinhasParoquiaWidgetState();
 }
 
-class _CardParoquiaWidgetState extends State<CardParoquiaWidget> {
+class _CardMinhasParoquiaWidgetState extends State<CardMinhasParoquiaWidget> {
   final FirebaseStorage storage = FirebaseStorage.instance;
   String ref = '';
   bool loading = true;
@@ -87,7 +88,11 @@ class _CardParoquiaWidgetState extends State<CardParoquiaWidget> {
               alignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  style: ButtonStyle(),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      AppColors.principal,
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,

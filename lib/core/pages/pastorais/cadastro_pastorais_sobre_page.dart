@@ -35,7 +35,7 @@ class _CadastroPastoraisSobrePageState
       firebase.firestore
           .collection('paroquia')
           .doc(widget.refParoquia)
-          .collection('pastoral')
+          .collection('pastorais')
           .doc(widget.refPastoral)
           .update({
         'sobre': _sobre.text,
