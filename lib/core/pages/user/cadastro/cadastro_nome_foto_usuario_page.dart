@@ -1,32 +1,25 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
-import 'package:minha_paroquia/core/pages/pastorais/cadastro_pastorais_sobre_page.dart';
+import 'package:minha_paroquia/core/pages/user/cadastro/cadastro_sobre_usuario_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
-class CadastroPastoraisPage extends StatefulWidget {
-  final String codigo;
-  final String docRef;
-  const CadastroPastoraisPage({
-    Key? key,
-    required this.codigo,
-    required this.docRef,
-  }) : super(key: key);
+class CadastroNomeFotoUsuarioPage extends StatefulWidget {
+  const CadastroNomeFotoUsuarioPage({Key? key}) : super(key: key);
 
   @override
-  State<CadastroPastoraisPage> createState() => _CadastroPastoraisPageState();
+  State<CadastroNomeFotoUsuarioPage> createState() =>
+      _CadastroNomeFotoUsuarioPageState();
 }
 
-class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
+class _CadastroNomeFotoUsuarioPageState
+    extends State<CadastroNomeFotoUsuarioPage> {
   final FirebaseStorage storage = FirebaseStorage.instance;
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nome = TextEditingController();
   String ref = '';
 
   Future<XFile?> getImage() async {
@@ -36,9 +29,11 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
   }
 
   Future<UploadTask> upload(String path) async {
+    AuthFirebaseService firebase =
+        Provider.of<AuthFirebaseService>(context, listen: false);
     File file = File(path);
     try {
-      ref = 'images/img-pastoral-${widget.codigo}.jpg';
+      ref = 'images/img-usr-${firebase.usuario!.uid}.jpg';
       return storage.ref(ref).putFile(file);
     } on FirebaseException catch (e) {
       throw Exception('Erro no upload: ${e.code}');
@@ -50,76 +45,54 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
     if (file != null) {
       UploadTask task = await upload(file.path);
     } else {
-      //mensagem de erro
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao inserir a imagem'),
+          backgroundColor: Colors.red[400],
+        ),
+      );
     }
   }
 
   _onSubmit() async {
-    AuthFirebaseService firebase =
-        Provider.of<AuthFirebaseService>(context, listen: false);
-    final isValid = _formKey.currentState!.validate();
+    try {
+      AuthFirebaseService firebase =
+          Provider.of<AuthFirebaseService>(context, listen: false);
 
-    if (isValid) {
-      DocumentReference dbRef = firebase.firestore
-          .collection('paroquia')
-          .doc(widget.docRef)
-          .collection('pastorais')
-          .doc();
-
-      firebase.firestore
-          .collection('paroquia')
-          .doc(widget.docRef)
-          .collection('pastorais')
-          .doc(dbRef.id)
-          .set({
-        'codigo_pastoral': widget.codigo,
-        'ref_imagem': ref,
-        'nome': _nome.text,
-        'ref_paroquia': widget.docRef,
-        'ref_pastoral': dbRef.id,
-      });
+      firebase.firestore.collection('usuarios').doc(firebase.usuario!.uid).set(
+        {
+          'uid': firebase.usuario!.uid,
+          'nome': firebase.usuario!.displayName,
+          'ref_imagem': ref,
+        },
+      );
 
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => CadastroPastoraisSobrePage(
-            refParoquia: widget.docRef,
-            refPastoral: dbRef.id,
-          ),
+          builder: (_) => CadastroSobreUsuarioPage(),
         ),
       );
-    } else {
-      //mensagem de erro
+    } on AuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Colors.red[400],
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
-        child: SafeArea(
-          top: true,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
       body: ListView(
         children: [
           SizedBox(height: 40),
           Column(
             children: [
               Text(
-                'Selecione a imagem e',
+                'Selecione uma foto para',
                 style: GoogleFonts.poppins(
                   fontSize: 25,
                   color: AppColors.principal,
@@ -128,7 +101,7 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
                 ),
               ),
               Text(
-                'um nome para a pastoral',
+                'seu perfil.',
                 style: GoogleFonts.poppins(
                   fontSize: 25,
                   color: AppColors.principal,
@@ -161,50 +134,6 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
           ),
           SizedBox(
             height: 25,
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Text(
-              'Escreva o nome para a pastoral.',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Color.fromARGB(255, 101, 104, 101),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40),
-              child: Material(
-                borderRadius: BorderRadius.circular(10),
-                elevation: 5,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: _nome,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 22,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                    ),
-                    keyboardType: TextInputType.name,
-                    validator: (text) {
-                      if (text == null || text.isEmpty) {
-                        return 'Preencha o campo corretamente!';
-                      }
-
-                      return null;
-                    },
-                  ),
-                ),
-              ),
-            ),
           ),
           SizedBox(height: 25),
           Padding(

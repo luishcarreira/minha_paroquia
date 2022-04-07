@@ -35,21 +35,6 @@ class _LoginPageState extends State<LoginPage> {
     setFormAction(true);
   }
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedImagem = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 50,
-      maxWidth: 150,
-    );
-
-    if (pickedImagem != null) {
-      setState(() {
-        _image = File(pickedImagem.path);
-      });
-    }
-  }
-
   setFormAction(bool acao) {
     setState(() {
       isLogin = acao;
@@ -131,56 +116,32 @@ class _LoginPageState extends State<LoginPage> {
                     if (!isLogin)
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.grey,
-                              backgroundImage:
-                                  _image != null ? FileImage(_image!) : null,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(10),
+                          //color: Colors.blueGrey[50],
+                          elevation: 5,
+                          //shadowColor: Colors.black,
+                          child: TextFormField(
+                            controller: nome,
+                            style: TextStyle(
+                              fontSize: 22,
                             ),
-                            TextButton(
-                              onPressed: _pickImage,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.image,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text('Adiconar Imagem'),
-                                ],
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'nome',
+                              hintStyle: TextStyle(
+                                color: AppColors.principal,
+                              ),
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(
+                                  Icons.person,
+                                  color: AppColors.principal,
+                                ),
                               ),
                             ),
-                            Material(
-                              borderRadius: BorderRadius.circular(10),
-                              //color: Colors.blueGrey[50],
-                              elevation: 5,
-                              //shadowColor: Colors.black,
-                              child: TextFormField(
-                                controller: nome,
-                                style: TextStyle(
-                                  fontSize: 22,
-                                ),
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'nome',
-                                  hintStyle: TextStyle(
-                                    color: AppColors.principal,
-                                  ),
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Icon(
-                                      Icons.person,
-                                      color: AppColors.principal,
-                                    ),
-                                  ),
-                                ),
-                                keyboardType: TextInputType.name,
-                              ),
-                            ),
-                          ],
+                            keyboardType: TextInputType.name,
+                          ),
                         ),
                       ),
                     Padding(
@@ -193,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextFormField(
                           controller: email,
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 18,
                           ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -224,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                           controller: senha,
                           obscureText: true,
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 18,
                           ),
                           decoration: InputDecoration(
                             border: InputBorder.none,

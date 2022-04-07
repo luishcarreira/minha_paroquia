@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
+import 'package:provider/provider.dart';
 
 class ReplyCard extends StatelessWidget {
   final String nome;
@@ -37,11 +39,17 @@ class ReplyCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      nome,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () {
+                        print('tap');
+                        _showDialog(context, nome);
+                      },
+                      child: Text(
+                        nome,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     Text(
@@ -70,4 +78,26 @@ class ReplyCard extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDialog(BuildContext context, String nome) {
+  AuthFirebaseService firebase =
+      Provider.of<AuthFirebaseService>(context, listen: false);
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Center(child: const Text("Paroquias")),
+        content: Text("Deseja entrar na $nome?"),
+        actions: <Widget>[
+          TextButton(
+            child: Text("Ok"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

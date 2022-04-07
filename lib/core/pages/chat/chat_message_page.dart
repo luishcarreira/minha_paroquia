@@ -44,6 +44,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(60),
             child: AppBar(
+              backgroundColor: AppColors.principal,
               leadingWidth: 70,
               titleSpacing: 0,
               leading: InkWell(

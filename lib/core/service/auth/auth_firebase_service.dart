@@ -27,7 +27,6 @@ class AuthFirebaseService extends ChangeNotifier {
   }
 
   registrar(String email, String senha, String nome) async {
-    print('firebase $nome');
     try {
       await _auth.createUserWithEmailAndPassword(email: email, password: senha);
       await _auth.currentUser!.updateDisplayName(nome);

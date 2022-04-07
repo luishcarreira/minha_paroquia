@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
-import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_cep_page.dart';
+import 'package:minha_paroquia/core/pages/paroquia/cadastros/inserir/paroquia_cep_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
@@ -58,7 +58,8 @@ class _ParoquiaImagemPageState extends State<ParoquiaImagemPage> {
     final isValid = _formKey.currentState!.validate();
 
     if (isValid) {
-      DocumentReference docRef = firebase.firestore.collection('grupos').doc();
+      DocumentReference docRef =
+          firebase.firestore.collection('paroquia').doc();
       firebase.firestore.collection('paroquia').doc(docRef.id).set({
         'codigo': widget.codigo,
         'nome': _nome.text,

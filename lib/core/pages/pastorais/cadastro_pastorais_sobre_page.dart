@@ -1,79 +1,86 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cep2/flutter_cep2.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
-import 'package:minha_paroquia/core/pages/paroquia/cadastros/paroquia_endereco_page.dart';
+import 'package:minha_paroquia/core/pages/paroquia/minhas_paroquias_page.dart';
+import 'package:minha_paroquia/core/pages/pastorais/pastorais_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
-class ParoquiaCEPPage extends StatefulWidget {
-  final String ref;
-  const ParoquiaCEPPage({Key? key, required this.ref}) : super(key: key);
+class CadastroPastoraisSobrePage extends StatefulWidget {
+  final String refParoquia;
+  final String refPastoral;
+  const CadastroPastoraisSobrePage({
+    Key? key,
+    required this.refParoquia,
+    required this.refPastoral,
+  }) : super(key: key);
 
   @override
-  State<ParoquiaCEPPage> createState() => _ParoquiaCEPPageState();
+  State<CadastroPastoraisSobrePage> createState() =>
+      _CadastroPastoraisSobrePageState();
 }
 
-class _ParoquiaCEPPageState extends State<ParoquiaCEPPage> {
+class _CadastroPastoraisSobrePageState
+    extends State<CadastroPastoraisSobrePage> {
+  final TextEditingController _sobre = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _cep = TextEditingController();
 
-  void _searchCEP() async {
-    try {
-      final CEP = flutter_cep2();
-      final result = await CEP.search(_cep.text);
+  _onSubmit() {
+    AuthFirebaseService firebase =
+        Provider.of<AuthFirebaseService>(context, listen: false);
 
-      if (result != null) {
-        Navigator.push(
-          context,
+    final isValid = _formKey.currentState!.validate();
+
+    if (isValid) {
+      firebase.firestore
+          .collection('paroquia')
+          .doc(widget.refParoquia)
+          .collection('pastorais')
+          .doc(widget.refPastoral)
+          .update({
+        'sobre': _sobre.text,
+      });
+
+      Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (_) => ParoquiaEnderecoPage(
-              result: result,
-              ref: widget.ref,
+            builder: (context) => PastoraisPage(
+              ref: widget.refParoquia,
             ),
           ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red[400],
-        ),
-      );
+          (Route<dynamic> route) => false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
-        child: SafeArea(
-          top: true,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
       body: ListView(
         children: [
           SizedBox(height: 40),
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Digite o CEP',
+                'Nos fale um pouco',
                 style: GoogleFonts.poppins(
-                  fontSize: 25,
+                  fontSize: 35,
+                  color: AppColors.principal,
+                  fontWeight: FontWeight.bold,
+                  height: 1.2,
+                ),
+              ),
+              Text(
+                'mais sobre',
+                style: GoogleFonts.poppins(
+                  fontSize: 35,
+                  color: AppColors.principal,
+                  fontWeight: FontWeight.bold,
+                  height: 1.2,
+                ),
+              ),
+              Text(
+                'a pastoral',
+                style: GoogleFonts.poppins(
+                  fontSize: 35,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
@@ -85,24 +92,24 @@ class _ParoquiaCEPPageState extends State<ParoquiaCEPPage> {
           Column(
             children: [
               Text(
-                'Escreva o nome para sua paroquia. Todos',
+                'Escreva uma breve biografia sobre você! Os',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
-                  color: Color.fromARGB(255, 193, 201, 192),
+                  color: Color(0xFFA1C69C),
                 ),
               ),
               Text(
-                'vão identificar a paroquia pelo',
+                'outros usuários poderão visualizar sua',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
-                  color: Color.fromARGB(255, 193, 201, 192),
+                  color: Color(0xFFA1C69C),
                 ),
               ),
               Text(
-                'nome que voce vai colocar aqui.',
+                'biografia visitando seu perfil.',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
-                  color: Color.fromARGB(255, 193, 201, 192),
+                  color: Color(0xFFA1C69C),
                 ),
               ),
             ],
@@ -118,20 +125,20 @@ class _ParoquiaCEPPageState extends State<ParoquiaCEPPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
-                    controller: _cep,
                     textAlign: TextAlign.center,
+                    controller: _sobre,
+                    maxLines: 3,
                     style: TextStyle(
                       fontSize: 22,
                     ),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                     ),
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.name,
                     validator: (text) {
                       if (text == null || text.isEmpty) {
                         return 'Preencha o campo corretamente!';
                       }
-
                       return null;
                     },
                   ),
@@ -143,7 +150,9 @@ class _ParoquiaCEPPageState extends State<ParoquiaCEPPage> {
           Padding(
             padding: EdgeInsets.all(24),
             child: GestureDetector(
-              onTap: _searchCEP,
+              onTap: () {
+                _onSubmit();
+              },
               child: Container(
                 decoration: BoxDecoration(
                   color: AppColors.principal,
