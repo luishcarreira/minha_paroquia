@@ -47,8 +47,41 @@ class _ParoquiaImagemPageState extends State<ParoquiaImagemPage> {
     XFile? file = await getImage();
     if (file != null) {
       UploadTask task = await upload(file.path);
+
+      task.snapshotEvents.listen((taskSnapshot) {
+        switch (taskSnapshot.state) {
+          case TaskState.running:
+            final progress = 100.0 *
+                (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+            print("Upload is $progress% complete.");
+            break;
+          case TaskState.paused:
+            print("Upload is paused.");
+            break;
+          case TaskState.canceled:
+            print("Upload was canceled");
+            break;
+          case TaskState.error:
+            // Handle unsuccessful uploads
+            break;
+          case TaskState.success:
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('O arquivo foi carregado com sucesso!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            // ...
+            break;
+        }
+      });
     } else {
-      //mensagem de erro
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao inserir a imagem'),
+          backgroundColor: Colors.red[400],
+        ),
+      );
     }
   }
 
@@ -118,7 +151,7 @@ class _ParoquiaImagemPageState extends State<ParoquiaImagemPage> {
                 ),
               ),
               Text(
-                'um nome para sua paroquia',
+                'um nome para sua paróquia',
                 style: GoogleFonts.poppins(
                   fontSize: 25,
                   color: AppColors.principal,
@@ -155,7 +188,7 @@ class _ParoquiaImagemPageState extends State<ParoquiaImagemPage> {
           Align(
             alignment: Alignment.center,
             child: Text(
-              'Escreva o nome para sua paroquia.',
+              'Escreva o nome para sua paróquia.',
               style: GoogleFonts.poppins(
                 fontSize: 14,
                 color: Color.fromARGB(255, 101, 104, 101),

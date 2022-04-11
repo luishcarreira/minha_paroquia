@@ -99,7 +99,7 @@ class _CardPastoralWidgetState extends State<CardPastoralWidget> {
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Erro ao excluir paroquia'),
+                        content: Text('Erro ao excluir pastoral'),
                         backgroundColor: Colors.red[400],
                       ),
                     );

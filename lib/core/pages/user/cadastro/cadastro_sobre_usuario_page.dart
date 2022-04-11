@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
+import 'package:minha_paroquia/core/pages/home/home_page.dart';
 import 'package:minha_paroquia/core/pages/paroquia/minhas_paroquias_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class _CadastroSobreUsuarioPageState extends State<CadastroSobreUsuarioPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => MinhasParoquiasPage(),
+          builder: (_) => HomePage(),
         ),
       );
     }
