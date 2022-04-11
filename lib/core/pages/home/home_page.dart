@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: paginaAtual,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.church), label: 'Paroquias'),
+          BottomNavigationBarItem(icon: Icon(Icons.church), label: 'Paróquias'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Explorar'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Conta'),
         ],

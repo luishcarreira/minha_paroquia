@@ -87,7 +87,7 @@ void _showDialog(BuildContext context, String nome) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Center(child: const Text("Paroquias")),
+        title: Center(child: const Text("Paróquias")),
         content: Text("Deseja entrar na $nome?"),
         actions: <Widget>[
           TextButton(

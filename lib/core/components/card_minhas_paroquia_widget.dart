@@ -133,13 +133,13 @@ class _CardMinhasParoquiaWidgetState extends State<CardMinhasParoquiaWidget> {
                               .delete();
 
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Paroquia excluida com sucesso!'),
+                            content: Text('Paróquia excluida com sucesso!'),
                             backgroundColor: Colors.green,
                           ));
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Erro ao excluir paroquia'),
+                              content: Text('Erro ao excluir paróquia'),
                               backgroundColor: Colors.red[400],
                             ),
                           );

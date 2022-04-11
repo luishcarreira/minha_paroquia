@@ -62,7 +62,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   registrar() async {
-    print('tela ${nome.text}');
     try {
       await context
           .read<AuthFirebaseService>()

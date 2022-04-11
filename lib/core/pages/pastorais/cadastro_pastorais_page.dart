@@ -49,8 +49,41 @@ class _CadastroPastoraisPageState extends State<CadastroPastoraisPage> {
     XFile? file = await getImage();
     if (file != null) {
       UploadTask task = await upload(file.path);
+
+      task.snapshotEvents.listen((taskSnapshot) {
+        switch (taskSnapshot.state) {
+          case TaskState.running:
+            final progress = 100.0 *
+                (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+            print("Upload is $progress% complete.");
+            break;
+          case TaskState.paused:
+            print("Upload is paused.");
+            break;
+          case TaskState.canceled:
+            print("Upload was canceled");
+            break;
+          case TaskState.error:
+            // Handle unsuccessful uploads
+            break;
+          case TaskState.success:
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('O arquivo foi carregado com sucesso!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            // ...
+            break;
+        }
+      });
     } else {
-      //mensagem de erro
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao inserir a imagem'),
+          backgroundColor: Colors.red[400],
+        ),
+      );
     }
   }
 

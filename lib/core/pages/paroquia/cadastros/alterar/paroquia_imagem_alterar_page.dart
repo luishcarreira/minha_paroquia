@@ -81,6 +81,35 @@ class _ParoquiaImagemAlterarPageState extends State<ParoquiaImagemAlterarPage> {
             XFile? file = await getImage();
             if (file != null) {
               UploadTask task = await upload(file.path);
+
+              task.snapshotEvents.listen((taskSnapshot) {
+                switch (taskSnapshot.state) {
+                  case TaskState.running:
+                    final progress = 100.0 *
+                        (taskSnapshot.bytesTransferred /
+                            taskSnapshot.totalBytes);
+                    print("Upload is $progress% complete.");
+                    break;
+                  case TaskState.paused:
+                    print("Upload is paused.");
+                    break;
+                  case TaskState.canceled:
+                    print("Upload was canceled");
+                    break;
+                  case TaskState.error:
+                    // Handle unsuccessful uploads
+                    break;
+                  case TaskState.success:
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('O arquivo foi carregado com sucesso!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    // ...
+                    break;
+                }
+              });
             } else {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: const Text('Erro ao alterar imagem'),
@@ -166,7 +195,7 @@ class _ParoquiaImagemAlterarPageState extends State<ParoquiaImagemAlterarPage> {
                   child: Column(
                     children: [
                       Text(
-                        'Nome da sua paroquia.',
+                        'Nome da sua paróquia.',
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: Color.fromARGB(255, 101, 104, 101),

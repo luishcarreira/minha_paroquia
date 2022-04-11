@@ -85,14 +85,14 @@ class _ParoquiaCEPPageState extends State<ParoquiaCEPPage> {
           Column(
             children: [
               Text(
-                'Escreva o nome para sua paroquia. Todos',
+                'Escreva o nome para sua paróquia. Todos',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Color.fromARGB(255, 193, 201, 192),
                 ),
               ),
               Text(
-                'vão identificar a paroquia pelo',
+                'vão identificar a paróquia pelo',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Color.fromARGB(255, 193, 201, 192),
