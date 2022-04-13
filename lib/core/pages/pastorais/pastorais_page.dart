@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/components/card_pastoral_widget.dart';
 import 'package:minha_paroquia/core/pages/chat/chat_message_page.dart';
+import 'package:minha_paroquia/core/pages/home/home_page.dart';
 import 'package:minha_paroquia/core/pages/pastorais/cadastro_pastorais_page.dart';
 import 'package:minha_paroquia/core/pages/pastorais/pastorais_sobre_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
@@ -38,7 +39,12 @@ class _PastoraisPageState extends State<PastoraisPage> {
               IconButton(
                 icon: Icon(Icons.close),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => HomePage(),
+                    ),
+                  );
                 },
               ),
             ],

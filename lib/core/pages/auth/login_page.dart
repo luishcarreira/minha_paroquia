@@ -22,7 +22,6 @@ class _LoginPageState extends State<LoginPage> {
   final email = TextEditingController();
   final nome = TextEditingController();
   final senha = TextEditingController();
-  File? _image;
 
   bool isLogin = true;
   late String titulo;

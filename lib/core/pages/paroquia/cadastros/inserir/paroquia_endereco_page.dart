@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cep2/flutter_cep2.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
+import 'package:minha_paroquia/core/pages/home/home_page.dart';
 import 'package:minha_paroquia/core/pages/paroquia/minhas_paroquias_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +51,7 @@ class _ParoquiaEnderecoPageState extends State<ParoquiaEnderecoPage> {
       );
 
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MinhasParoquiasPage()),
+          MaterialPageRoute(builder: (context) => HomePage()),
           (Route<dynamic> route) => false);
     } else {}
   }

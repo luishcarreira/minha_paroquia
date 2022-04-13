@@ -40,7 +40,7 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
           return UsuarioPerfilWidget(
             foto: data['ref_imagem'],
             nome: firebase.usuario!.displayName,
-            sobre: data['sobre'],
+            sobre: data['sobre'] ?? '',
           );
         }
 
