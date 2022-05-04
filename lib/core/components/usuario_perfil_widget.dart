@@ -104,7 +104,7 @@ class _UsuarioPerfilWidgetState extends State<UsuarioPerfilWidget> {
             padding: EdgeInsets.all(20),
             child: Column(
               children: <Widget>[
-                Text(widget.sobre),
+                (widget.sobre == '') ? Text(widget.sobre) : Text(' '),
               ],
             ),
           ),

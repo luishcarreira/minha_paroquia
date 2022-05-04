@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     _minhasParoquias.forEach((element) {
       element.docs.asMap().forEach((index, data) {
         paroquiaCod.add(element.docs[index]['codigo']);
+        paroquiaCod.remove(element.docs[index]['codigo']);
       });
     });
   }
