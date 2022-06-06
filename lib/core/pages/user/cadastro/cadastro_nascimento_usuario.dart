@@ -1,28 +1,23 @@
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
-import 'package:minha_paroquia/core/pages/paroquia/minhas_paroquias_page.dart';
-import 'package:minha_paroquia/core/pages/pastorais/pastorais_page.dart';
+import 'package:minha_paroquia/core/pages/user/cadastro/cadastro_sobre_usuario_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
-class CadastroPastoraisSobrePage extends StatefulWidget {
-  final String refParoquia;
-  final String refPastoral;
-  const CadastroPastoraisSobrePage({
-    Key? key,
-    required this.refParoquia,
-    required this.refPastoral,
-  }) : super(key: key);
+class CadastroNascimentoUsuario extends StatefulWidget {
+  const CadastroNascimentoUsuario({Key? key}) : super(key: key);
 
   @override
-  State<CadastroPastoraisSobrePage> createState() =>
-      _CadastroPastoraisSobrePageState();
+  State<CadastroNascimentoUsuario> createState() =>
+      _CadastroNascimentoUsuarioState();
 }
 
-class _CadastroPastoraisSobrePageState
-    extends State<CadastroPastoraisSobrePage> {
-  final TextEditingController _sobre = TextEditingController();
+class _CadastroNascimentoUsuarioState extends State<CadastroNascimentoUsuario> {
+  final format = DateFormat("dd-MM-yyyy");
+  final TextEditingController _data = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   _onSubmit() {
@@ -33,22 +28,18 @@ class _CadastroPastoraisSobrePageState
 
     if (isValid) {
       firebase.firestore
-          .collection('paroquia')
-          .doc(widget.refParoquia)
-          .collection('pastorais')
-          .doc(widget.refPastoral)
+          .collection('usuarios')
+          .doc(firebase.usuario!.uid)
           .update({
-        'sobre': _sobre.text,
+        'data_nascimento': _data.text,
       });
 
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => PastoraisPage(
-              ref: widget.refParoquia,
-              admin: true,
-            ),
-          ),
-          (Route<dynamic> route) => false);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const CadastroSobreUsuarioPage(),
+        ),
+      );
     }
   }
 
@@ -61,27 +52,27 @@ class _CadastroPastoraisSobrePageState
           Column(
             children: [
               Text(
-                'Nos fale um pouco',
+                'Qual a sua',
                 style: GoogleFonts.poppins(
-                  fontSize: 35,
+                  fontSize: 40,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
                 ),
               ),
               Text(
-                'mais sobre',
+                'data de',
                 style: GoogleFonts.poppins(
-                  fontSize: 35,
+                  fontSize: 40,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
                 ),
               ),
               Text(
-                'a pastoral',
+                'nascimento?',
                 style: GoogleFonts.poppins(
-                  fontSize: 35,
+                  fontSize: 40,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
@@ -90,30 +81,14 @@ class _CadastroPastoraisSobrePageState
             ],
           ),
           SizedBox(height: 25),
-          Column(
-            children: [
-              Text(
-                'Escreva uma breve biografia sobre você! Os',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Color(0xFFA1C69C),
-                ),
+          Center(
+            child: Text(
+              'Insira sua data de nascimento',
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Color(0xFFA1C69C),
               ),
-              Text(
-                'outros usuários poderão visualizar sua',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Color(0xFFA1C69C),
-                ),
-              ),
-              Text(
-                'biografia visitando seu perfil.',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Color(0xFFA1C69C),
-                ),
-              ),
-            ],
+            ),
           ),
           SizedBox(height: 25),
           Form(
@@ -125,21 +100,29 @@ class _CadastroPastoraisSobrePageState
                 elevation: 5,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    controller: _sobre,
-                    maxLines: 3,
-                    style: TextStyle(
-                      fontSize: 22,
-                    ),
+                  child: DateTimeField(
                     decoration: InputDecoration(
                       border: InputBorder.none,
+                      prefixIcon: Icon(
+                        Icons.date_range,
+                        color: AppColors.principal,
+                      ),
                     ),
-                    keyboardType: TextInputType.name,
+                    format: format,
+                    controller: _data,
+                    onShowPicker: (context, currentValue) {
+                      return showDatePicker(
+                        context: context,
+                        firstDate: DateTime(1900),
+                        initialDate: currentValue ?? DateTime.now(),
+                        lastDate: DateTime(2100),
+                      );
+                    },
                     validator: (text) {
-                      if (text == null || text.isEmpty) {
+                      if (text == null) {
                         return 'Preencha o campo corretamente!';
                       }
+
                       return null;
                     },
                   ),

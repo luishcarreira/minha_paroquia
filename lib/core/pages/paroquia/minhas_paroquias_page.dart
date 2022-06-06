@@ -102,19 +102,37 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
                 Map<String, dynamic> data =
                     document.data()! as Map<String, dynamic>;
 
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CardMinhasParoquiaWidget(
-                      imagem: data['ref_imagem'],
-                      nome: data['nome'] ?? '',
-                      endereco: data['endereco_completo'] ?? '',
-                      ref: data['ref'],
-                    ),
-                  ],
-                );
+                if (data['admin'] == firebase.usuario!.uid) {
+                  return Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CardMinhasParoquiaWidget(
+                        imagem: data['ref_imagem'],
+                        nome: data['nome'] ?? '',
+                        endereco: data['endereco_completo'] ?? '',
+                        ref: data['ref'],
+                        admin: true,
+                      ),
+                    ],
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CardMinhasParoquiaWidget(
+                        imagem: data['ref_imagem'],
+                        nome: data['nome'] ?? '',
+                        endereco: data['endereco_completo'] ?? '',
+                        ref: data['ref'],
+                        admin: false,
+                      ),
+                    ],
+                  );
+                }
               },
             ).toList(),
           );

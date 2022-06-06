@@ -7,8 +7,9 @@ import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
 class ExplorarPage extends StatefulWidget {
-  final List<String>? paroquiaCod;
-  const ExplorarPage({Key? key, this.paroquiaCod}) : super(key: key);
+  const ExplorarPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ExplorarPage> createState() => _ExplorarPageState();
@@ -16,6 +17,32 @@ class ExplorarPage extends StatefulWidget {
 
 class _ExplorarPageState extends State<ExplorarPage> {
   String searchtxt = '';
+  List<String> paroquiaCod = [''];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initParoquias();
+  }
+
+  initParoquias() {
+    AuthFirebaseService firebase =
+        Provider.of<AuthFirebaseService>(context, listen: false);
+    Stream<QuerySnapshot> _minhasParoquias = firebase.firestore
+        .collection('paroquia')
+        .where('participantes', arrayContains: firebase.usuario!.uid)
+        .snapshots();
+
+    _minhasParoquias.forEach((element) {
+      element.docs.asMap().forEach((index, data) {
+        setState(() {
+          paroquiaCod.add(element.docs[index]['codigo']);
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +98,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('paroquia')
-            .where('codigo', whereNotIn: widget.paroquiaCod)
+            .where('codigo', whereNotIn: paroquiaCod)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {

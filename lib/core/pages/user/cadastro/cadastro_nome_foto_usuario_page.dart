@@ -5,22 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
-import 'package:minha_paroquia/core/pages/user/cadastro/cadastro_sobre_usuario_page.dart';
+import 'package:minha_paroquia/core/pages/user/cadastro/cadastro_nascimento_usuario.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
-class CadastroNomeFotoUsuarioPage extends StatefulWidget {
-  const CadastroNomeFotoUsuarioPage({Key? key}) : super(key: key);
+class CadastroFotoUsuarioPage extends StatefulWidget {
+  const CadastroFotoUsuarioPage({Key? key}) : super(key: key);
 
   @override
-  State<CadastroNomeFotoUsuarioPage> createState() =>
-      _CadastroNomeFotoUsuarioPageState();
+  State<CadastroFotoUsuarioPage> createState() =>
+      _CadastroFotoUsuarioPageState();
 }
 
-class _CadastroNomeFotoUsuarioPageState
-    extends State<CadastroNomeFotoUsuarioPage> {
+class _CadastroFotoUsuarioPageState extends State<CadastroFotoUsuarioPage> {
   final FirebaseStorage storage = FirebaseStorage.instance;
   String ref = '';
+  bool success = false;
 
   Future<XFile?> getImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -62,6 +62,9 @@ class _CadastroNomeFotoUsuarioPageState
             // Handle unsuccessful uploads
             break;
           case TaskState.success:
+            setState(() {
+              success = true;
+            });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('O arquivo foi carregado com sucesso!'),
@@ -87,9 +90,13 @@ class _CadastroNomeFotoUsuarioPageState
       AuthFirebaseService firebase =
           Provider.of<AuthFirebaseService>(context, listen: false);
 
-      firebase.firestore.collection('usuarios').doc(firebase.usuario!.uid).set(
+      await firebase.firestore
+          .collection('usuarios')
+          .doc(firebase.usuario!.uid)
+          .set(
         {
           'uid': firebase.usuario!.uid,
+          'email': firebase.usuario!.email,
           'nome': firebase.usuario!.displayName,
           'ref_imagem': ref,
         },
@@ -98,7 +105,7 @@ class _CadastroNomeFotoUsuarioPageState
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => CadastroSobreUsuarioPage(),
+          builder: (_) => const CadastroNascimentoUsuario(),
         ),
       );
     } on AuthException catch (e) {
@@ -164,36 +171,38 @@ class _CadastroNomeFotoUsuarioPageState
             height: 25,
           ),
           SizedBox(height: 25),
-          Padding(
-            padding: EdgeInsets.all(24),
-            child: GestureDetector(
-              onTap: () {
-                _onSubmit();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.principal,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        'Continuar',
-                        style: GoogleFonts.poppins(
-                          fontSize: 24,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
+          success
+              ? Padding(
+                  padding: EdgeInsets.all(24),
+                  child: GestureDetector(
+                    onTap: () {
+                      _onSubmit();
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.principal,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Text(
+                              'Continuar',
+                              style: GoogleFonts.poppins(
+                                fontSize: 24,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+                  ),
+                )
+              : const Text(''),
         ],
       ),
     );

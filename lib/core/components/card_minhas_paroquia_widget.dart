@@ -12,6 +12,7 @@ class CardMinhasParoquiaWidget extends StatefulWidget {
   final String nome;
   final String endereco;
   final String ref;
+  final bool admin;
 
   const CardMinhasParoquiaWidget({
     Key? key,
@@ -19,6 +20,7 @@ class CardMinhasParoquiaWidget extends StatefulWidget {
     required this.nome,
     required this.endereco,
     required this.ref,
+    required this.admin,
   }) : super(key: key);
 
   @override
@@ -99,59 +101,64 @@ class _CardMinhasParoquiaWidgetState extends State<CardMinhasParoquiaWidget> {
                       MaterialPageRoute(
                         builder: (_) => PastoraisPage(
                           ref: widget.ref,
+                          admin: widget.admin,
                         ),
                       ),
                     );
                   },
                   child: const Text('Pastorais'),
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ParoquiaImagemAlterarPage(
-                              ref_paroquia: widget.ref,
-                              foto: ref,
+                widget.admin
+                    ? Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ParoquiaImagemAlterarPage(
+                                    ref_paroquia: widget.ref,
+                                    foto: ref,
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.edit,
+                              color: AppColors.principal,
                             ),
                           ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        color: AppColors.principal,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        try {
-                          firebase.firestore
-                              .collection('paroquia')
-                              .doc(widget.ref)
-                              .delete();
+                          IconButton(
+                            onPressed: () {
+                              try {
+                                firebase.firestore
+                                    .collection('paroquia')
+                                    .doc(widget.ref)
+                                    .delete();
 
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Paróquia excluida com sucesso!'),
-                            backgroundColor: Colors.green,
-                          ));
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Erro ao excluir paróquia'),
-                              backgroundColor: Colors.red[400],
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content:
+                                      Text('Paróquia excluida com sucesso!'),
+                                  backgroundColor: Colors.green,
+                                ));
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Erro ao excluir paróquia'),
+                                    backgroundColor: Colors.red[400],
+                                  ),
+                                );
+                              }
+                            },
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.red,
                             ),
-                          );
-                        }
-                      },
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      ),
-                    )
-                  ],
-                )
+                          )
+                        ],
+                      )
+                    : Text(''),
               ],
             ),
           ],

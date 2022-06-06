@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/pages/home/home_page.dart';
-import 'package:minha_paroquia/core/pages/paroquia/minhas_paroquias_page.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +34,7 @@ class _CadastroSobreUsuarioPageState extends State<CadastroSobreUsuarioPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => HomePage(),
+          builder: (_) => const HomePage(),
         ),
       );
     }
@@ -52,7 +51,7 @@ class _CadastroSobreUsuarioPageState extends State<CadastroSobreUsuarioPage> {
               Text(
                 'Nos fale um pouco',
                 style: GoogleFonts.poppins(
-                  fontSize: 40,
+                  fontSize: 30,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
@@ -61,7 +60,7 @@ class _CadastroSobreUsuarioPageState extends State<CadastroSobreUsuarioPage> {
               Text(
                 'mais sobre',
                 style: GoogleFonts.poppins(
-                  fontSize: 40,
+                  fontSize: 30,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
@@ -70,7 +69,7 @@ class _CadastroSobreUsuarioPageState extends State<CadastroSobreUsuarioPage> {
               Text(
                 'você!',
                 style: GoogleFonts.poppins(
-                  fontSize: 40,
+                  fontSize: 30,
                   color: AppColors.principal,
                   fontWeight: FontWeight.bold,
                   height: 1.2,
@@ -85,21 +84,21 @@ class _CadastroSobreUsuarioPageState extends State<CadastroSobreUsuarioPage> {
                 'Escreva uma breve biografia sobre você! Os',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
-                  color: Color(0xFFA1C69C),
+                  color: Color.fromARGB(255, 169, 173, 169),
                 ),
               ),
               Text(
                 'outros usuários poderão visualizar sua',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
-                  color: Color(0xFFA1C69C),
+                  color: Color.fromARGB(255, 169, 173, 169),
                 ),
               ),
               Text(
                 'biografia visitando seu perfil.',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
-                  color: Color(0xFFA1C69C),
+                  color: Color.fromARGB(255, 169, 173, 169),
                 ),
               ),
             ],
@@ -154,7 +153,7 @@ class _CadastroSobreUsuarioPageState extends State<CadastroSobreUsuarioPage> {
                     Padding(
                       padding: EdgeInsets.all(16),
                       child: Text(
-                        'Continuar',
+                        'Finalizar',
                         style: GoogleFonts.poppins(
                           fontSize: 24,
                           color: Colors.white,

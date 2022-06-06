@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:minha_paroquia/core/app/app_colors.dart';
 import 'package:minha_paroquia/core/pages/auth/login_page.dart';
 import 'package:minha_paroquia/core/pages/home/home_page.dart';
 import 'package:minha_paroquia/core/pages/paroquia/minhas_paroquias_page.dart';
@@ -22,7 +23,7 @@ class _AuthCheckState extends State<AuthCheck> {
     AuthFirebaseService auth = Provider.of<AuthFirebaseService>(context);
 
     if (auth.isLoading) {
-      return Loading();
+      return loading();
     } else if (auth.usuario == null) {
       return LoginPage();
     } else {
@@ -31,10 +32,21 @@ class _AuthCheckState extends State<AuthCheck> {
   }
 }
 
-Loading() {
+loading() {
   return Scaffold(
     body: Center(
-      child: CircularProgressIndicator(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            backgroundColor: Colors.grey,
+            color: AppColors.principal,
+            strokeWidth: 10,
+          ),
+          SizedBox(height: 20),
+          Text('Aguarde um momento...')
+        ],
+      ),
     ),
   );
 }
@@ -60,7 +72,7 @@ verificaRegistro(AuthFirebaseService auth) {
       }
 
       if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
-        return CadastroNomeFotoUsuarioPage();
+        return CadastroFotoUsuarioPage();
       } else {
         return HomePage();
       }

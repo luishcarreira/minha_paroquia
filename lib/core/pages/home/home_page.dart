@@ -21,30 +21,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    initParoquia();
     super.initState();
     pc = PageController(initialPage: paginaAtual);
   }
 
-  void initParoquia() {
-    AuthFirebaseService firebase =
-        Provider.of<AuthFirebaseService>(context, listen: false);
-    Stream<QuerySnapshot> _minhasParoquias = firebase.firestore
-        .collection('paroquia')
-        .where('participantes', arrayContains: firebase.usuario!.uid)
-        .snapshots();
-
-    _minhasParoquias.forEach((element) {
-      element.docs.asMap().forEach((index, data) {
-        paroquiaCod.add(element.docs[index]['codigo']);
-        paroquiaCod.remove(element.docs[index]['codigo']);
-      });
-    });
-  }
-
   setPaginaAtual(pagina) {
     setState(() {
-      initParoquia();
       paginaAtual = pagina;
     });
   }
@@ -56,10 +38,8 @@ class _HomePageState extends State<HomePage> {
         controller: pc,
         children: [
           MinhasParoquiasPage(),
-          ExplorarPage(
-            paroquiaCod: paroquiaCod,
-          ),
-          UsuarioPerfilPage()
+          ExplorarPage(),
+          UsuarioPerfilPage(),
         ],
         onPageChanged: setPaginaAtual,
       ),

@@ -116,13 +116,11 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
                         child: Material(
                           borderRadius: BorderRadius.circular(10),
-                          //color: Colors.blueGrey[50],
                           elevation: 5,
-                          //shadowColor: Colors.black,
                           child: TextFormField(
                             controller: nome,
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: 18,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
