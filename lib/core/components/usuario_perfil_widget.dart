@@ -7,13 +7,15 @@ import 'package:provider/provider.dart';
 
 class UsuarioPerfilWidget extends StatefulWidget {
   final String foto;
-  final String? nome;
+  final String nome;
+  final String email;
   final String sobre;
   const UsuarioPerfilWidget({
     Key? key,
     required this.foto,
     required this.nome,
     required this.sobre,
+    required this.email,
   }) : super(key: key);
 
   @override
@@ -95,17 +97,31 @@ class _UsuarioPerfilWidgetState extends State<UsuarioPerfilWidget> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(50),
-        child: Card(
-          elevation: 4,
-          child: Container(
-            margin: EdgeInsets.all(100),
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: <Widget>[
-                (widget.sobre == '') ? Text(widget.sobre) : Text(' '),
-              ],
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 35),
+          child: Card(
+            elevation: 4,
+            child: Container(
+              height: 200,
+              width: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.email),
+                    title: Text(widget.email),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.date_range),
+                    title: Text('data de aniversario'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.chat),
+                    title: Text(widget.sobre),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -113,3 +129,5 @@ class _UsuarioPerfilWidgetState extends State<UsuarioPerfilWidget> {
     );
   }
 }
+
+/* (widget.sobre == '') ? Text(widget.sobre) : Text(''), */

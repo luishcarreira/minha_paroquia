@@ -21,6 +21,7 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
 
     CollectionReference users =
         FirebaseFirestore.instance.collection('usuarios');
+
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(firebase.usuario!.uid).get(),
       builder:
@@ -39,8 +40,9 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
 
           return UsuarioPerfilWidget(
             foto: data['ref_imagem'],
-            nome: firebase.usuario!.displayName,
-            sobre: data['sobre'] ?? '',
+            nome: data['nome'],
+            email: data['email'],
+            sobre: data['sobre'],
           );
         }
 

@@ -15,12 +15,14 @@ class PastoraisSobrePage extends StatefulWidget {
   final String codigo_pastoral;
   final String imagem;
   final String nome;
+  final bool admin;
   const PastoraisSobrePage({
     Key? key,
     required this.codigo_pastoral,
     required this.imagem,
     required this.nome,
     required this.refParoquia,
+    required this.admin,
   }) : super(key: key);
 
   @override
@@ -96,10 +98,11 @@ class _PastoraisSobrePageState extends State<PastoraisSobrePage> {
                               child: Text("Chat"),
                               value: 'chat',
                             ),
-                            PopupMenuItem(
-                              child: Text("Adicionar Evento"),
-                              value: 'evento',
-                            ),
+                            if (widget.admin)
+                              PopupMenuItem(
+                                child: Text("Adicionar Evento"),
+                                value: 'evento',
+                              )
                           ];
                         },
                       ),
@@ -166,56 +169,73 @@ class _PastoraisSobrePageState extends State<PastoraisSobrePage> {
                   return Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Ainda não temos nenhum evento.',
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          color: AppColors.principal,
-                          fontWeight: FontWeight.bold,
-                          height: 1.2,
-                        ),
-                      ),
-                      Text(
-                        'Clique aqui para adicionar um!',
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          color: AppColors.principal,
-                          fontWeight: FontWeight.bold,
-                          height: 1.2,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => CadastroEventoPage(
-                                codigo_pastoral: widget.codigo_pastoral,
-                              ),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.add),
-                        label: Text('Adicionar'),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            AppColors.principal,
+                  if (widget.admin) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Ainda não temos nenhum evento.',
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            color: AppColors.principal,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
                           ),
-                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                            Radius.circular(30.0),
-                          ))),
                         ),
-                      )
-                    ],
-                  );
+                        Text(
+                          'Clique aqui para adicionar um!',
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            color: AppColors.principal,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => CadastroEventoPage(
+                                  codigo_pastoral: widget.codigo_pastoral,
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.add),
+                          label: Text('Adicionar'),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              AppColors.principal,
+                            ),
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                              Radius.circular(30.0),
+                            ))),
+                          ),
+                        )
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Ainda não temos nenhum evento.',
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            color: AppColors.principal,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
                 } else {
                   return ListView(
                     children: snapshot.data!.docs.map(
@@ -270,7 +290,7 @@ class _PastoraisSobrePageState extends State<PastoraisSobrePage> {
                                       Icons.more_vert,
                                       color: AppColors.principal,
                                     ),
-                                    padding: EdgeInsets.all(0),
+                                    padding: const EdgeInsets.all(0),
                                     onSelected: (value) {
                                       if (value == 'editar') {
                                         Navigator.push(
@@ -333,17 +353,17 @@ class _PastoraisSobrePageState extends State<PastoraisSobrePage> {
 
                       return Padding(
                         padding: const EdgeInsets.all(50),
-                        child: Card(
-                          elevation: 4,
-                          child: Container(
-                            margin: EdgeInsets.all(100),
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              children: <Widget>[
-                                Text(data['sobre']),
-                              ],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              data['sobre'],
+                              style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                //color: Color.fromARGB(255, 193, 201, 192),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       );
                     },
