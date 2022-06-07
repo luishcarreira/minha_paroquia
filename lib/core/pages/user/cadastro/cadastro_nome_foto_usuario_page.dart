@@ -90,10 +90,7 @@ class _CadastroFotoUsuarioPageState extends State<CadastroFotoUsuarioPage> {
       AuthFirebaseService firebase =
           Provider.of<AuthFirebaseService>(context, listen: false);
 
-      await firebase.firestore
-          .collection('usuarios')
-          .doc(firebase.usuario!.uid)
-          .set(
+      firebase.firestore.collection('usuarios').doc(firebase.usuario!.uid).set(
         {
           'uid': firebase.usuario!.uid,
           'email': firebase.usuario!.email,
@@ -105,7 +102,7 @@ class _CadastroFotoUsuarioPageState extends State<CadastroFotoUsuarioPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => const CadastroNascimentoUsuario(),
+          builder: (_) => CadastroNascimentoUsuario(),
         ),
       );
     } on AuthException catch (e) {

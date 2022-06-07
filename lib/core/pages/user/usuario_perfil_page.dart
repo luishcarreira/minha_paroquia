@@ -40,13 +40,13 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
 
           return UsuarioPerfilWidget(
             foto: data['ref_imagem'],
-            nome: data['nome'],
-            email: data['email'],
+            nome: data['nome'] ?? '',
+            email: data['email'] ?? '',
             sobre: data['sobre'],
           );
         }
 
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },
