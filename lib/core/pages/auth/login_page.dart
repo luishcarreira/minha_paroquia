@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await context
           .read<AuthFirebaseService>()
-          .registrar(email.text, senha.text, nome.text);
+          .registrar(email.text, senha.text);
     } on AuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(e.message),
@@ -111,35 +111,6 @@ class _LoginPageState extends State<LoginPage> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    if (!isLogin)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
-                        child: Material(
-                          borderRadius: BorderRadius.circular(10),
-                          elevation: 5,
-                          child: TextFormField(
-                            controller: nome,
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'nome',
-                              hintStyle: TextStyle(
-                                color: AppColors.principal,
-                              ),
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Icon(
-                                  Icons.person,
-                                  color: AppColors.principal,
-                                ),
-                              ),
-                            ),
-                            keyboardType: TextInputType.name,
-                          ),
-                        ),
-                      ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
                       child: Material(

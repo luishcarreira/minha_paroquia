@@ -102,7 +102,9 @@ class _MinhasParoquiasPageState extends State<MinhasParoquiasPage> {
                 Map<String, dynamic> data =
                     document.data()! as Map<String, dynamic>;
 
-                if (data['admin'] == firebase.usuario!.uid) {
+                final listaAdmin = data['admin'] as List<dynamic>;
+
+                if (listaAdmin.contains(firebase.usuario!.uid)) {
                   return Column(
                     children: [
                       SizedBox(

@@ -94,6 +94,9 @@ class _ParoquiaImagemPageState extends State<ParoquiaImagemPage> {
       DocumentReference docRef =
           firebase.firestore.collection('paroquia').doc();
       firebase.firestore.collection('paroquia').doc(docRef.id).set({
+        'admin': [
+          firebase.usuario!.uid,
+        ],
         'codigo': widget.codigo,
         'nome': _nome.text,
         'ref_imagem': ref,

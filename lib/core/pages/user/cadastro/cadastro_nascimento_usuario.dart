@@ -31,7 +31,7 @@ class _CadastroNascimentoUsuarioState extends State<CadastroNascimentoUsuario> {
           .collection('usuarios')
           .doc(firebase.usuario!.uid)
           .update({
-        'data_nascimento': _data.text,
+        'nascimento': _data.text,
       });
 
       Navigator.push(
