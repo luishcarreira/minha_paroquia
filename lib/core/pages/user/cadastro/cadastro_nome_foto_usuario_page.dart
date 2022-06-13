@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:minha_paroquia/core/app/app_colors.dart';
+import 'package:minha_paroquia/core/pages/auth/auth_check.dart';
 import 'package:minha_paroquia/core/pages/user/cadastro/cadastro_nascimento_usuario.dart';
 import 'package:minha_paroquia/core/service/auth/auth_firebase_service.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,9 @@ class CadastroFotoUsuarioPage extends StatefulWidget {
 }
 
 class _CadastroFotoUsuarioPageState extends State<CadastroFotoUsuarioPage> {
+  final _formKey = GlobalKey<FormState>();
   final FirebaseStorage storage = FirebaseStorage.instance;
+  final TextEditingController _nome = TextEditingController();
   String ref = '';
   bool success = false;
 
@@ -48,9 +51,7 @@ class _CadastroFotoUsuarioPageState extends State<CadastroFotoUsuarioPage> {
       task.snapshotEvents.listen((taskSnapshot) {
         switch (taskSnapshot.state) {
           case TaskState.running:
-            final progress = 100.0 *
-                (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-            print("Upload is $progress% complete.");
+            loading();
             break;
           case TaskState.paused:
             print("Upload is paused.");
@@ -94,10 +95,12 @@ class _CadastroFotoUsuarioPageState extends State<CadastroFotoUsuarioPage> {
         {
           'uid': firebase.usuario!.uid,
           'email': firebase.usuario!.email,
-          'nome': firebase.usuario!.displayName,
+          'nome': _nome.text,
           'ref_imagem': ref,
         },
       );
+
+      firebase.usuario!.updateDisplayName(_nome.text);
 
       Navigator.push(
         context,
@@ -167,6 +170,56 @@ class _CadastroFotoUsuarioPageState extends State<CadastroFotoUsuarioPage> {
           SizedBox(
             height: 25,
           ),
+          Column(
+            children: [
+              Text(
+                'Nome ou apelido que será exibido para os outros',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color.fromARGB(255, 185, 185, 185),
+                ),
+              ),
+              Text(
+                'usuários do aplicativo.',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color.fromARGB(255, 185, 185, 185),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 25),
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 40, right: 40),
+              child: Material(
+                borderRadius: BorderRadius.circular(10),
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: _nome,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 22,
+                    ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                    keyboardType: TextInputType.name,
+                    validator: (text) {
+                      if (text == null || text.isEmpty) {
+                        return 'Preencha o campo corretamente!';
+                      }
+
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
           SizedBox(height: 25),
           success
               ? Padding(
@@ -204,4 +257,16 @@ class _CadastroFotoUsuarioPageState extends State<CadastroFotoUsuarioPage> {
       ),
     );
   }
+}
+
+void _showDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return const AlertDialog(
+        title: Text("Carregando arquivo"),
+        content: CircularProgressIndicator(),
+      );
+    },
+  );
 }

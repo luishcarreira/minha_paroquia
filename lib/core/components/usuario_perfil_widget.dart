@@ -10,12 +10,14 @@ class UsuarioPerfilWidget extends StatefulWidget {
   final String nome;
   final String email;
   final String sobre;
+  final String nascimento;
   const UsuarioPerfilWidget({
     Key? key,
     required this.foto,
     required this.nome,
     required this.sobre,
     required this.email,
+    required this.nascimento,
   }) : super(key: key);
 
   @override
@@ -114,7 +116,7 @@ class _UsuarioPerfilWidgetState extends State<UsuarioPerfilWidget> {
                   ),
                   ListTile(
                     leading: Icon(Icons.date_range),
-                    title: Text('data de aniversario'),
+                    title: Text(widget.nascimento),
                   ),
                   ListTile(
                     leading: Icon(Icons.chat),

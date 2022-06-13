@@ -17,7 +17,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int paginaAtual = 0;
   late PageController pc;
-  List<String> paroquiaCod = [''];
 
   @override
   void initState() {

@@ -43,6 +43,7 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
             nome: data['nome'] ?? '',
             email: data['email'] ?? '',
             sobre: data['sobre'],
+            nascimento: data['nascimento'],
           );
         }
 
